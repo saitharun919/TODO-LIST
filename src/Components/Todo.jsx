@@ -1,101 +1,90 @@
 import React, { useState } from "react";
 
 const Todo = () => {
-  const [todos, setTodos] = useState([
-    { text: "gym", category: "Health" },
-    { text: "milk", category: "Shopping" },
+  const category = ["General", "Shopping", "Health", "Bills"];
+  const [todo, setTodo] = useState([
+    { text: "Milk", category: "General" },
+    { text: "Shirt", category: "Shopping" },
   ]);
-
-  const [inputfield, setInputfield] = useState("");
-  const [category, setCategory] = useState("General");
-  const [filtreCategory, setFiltreCategory] = useState("All");
-
-  const categories = ["General", "Health", "Shopping", "Work"];
-
-  const changeHandle = (e) => {
-    setInputfield(e.target.value);
-  };
-
-  const categoryChangeHandle = (e) => {
-    setCategory(e.target.value);
-  };
+  const [inputField, setInputField] = useState("");
+  const [currCategory, setCurrCategory] = useState("General");
+  const [filteredCat, setFilteredCat] = useState("ALL");
 
   const addHandle = () => {
-    if (inputfield.trim()) {
-      setTodos([...todos, { text: inputfield, category }]);
-      setInputfield("");
+    if (inputField.trim()) {
+      setTodo([...todo, { text: inputField, category: currCategory }]);
+      setInputField("");
     }
   };
 
-  const deleteHandle = (index) =>{
-    setTodos(todos.filter((_,i) =>i !== index ))
-  }
+  const deleteHandle = (index) => {
+    setTodo(todo.filter((_, i) => i !== index));
+  };
 
   const upHandle = (index) =>{
     if(index > 0){
-        const update = [...todos];
-
-        [update[index],update[index-1]]=[update[index-1],update[index]];
-        setTodos(update);
+        const update = [...todo];
+        [update[index],update[index -1]] = [update[index-1],update[index]];
+        setTodo(update);
     }
   }
 
   const downHandle = (index) =>{
-    if(index < todos.length -1){
-        const update = [...todos];
-        [update[index], update[index + 1]] = [update[index+1],update[index]];
-        setTodos(update);
+    if(index < todo.length -1){
+        const update = [...todo];
+        [update[index],update[index +1]] = [update[index+1],update[index]];
+        setTodo(update);
     }
   }
 
-  const filteredTodos =
-    filtreCategory === "All"
-      ? todos
-      : todos.filter((todo) => todo.category === filtreCategory);
-
+  const filteredList = filteredCat === "ALL" ? todo : todo.filter((todo) => todo.category === filteredCat)
   return (
     <div>
       <h1>TODO LIST</h1>
-      <input className="border" onChange={changeHandle}></input>
-      <select
-        value={category}
-        onChange={categoryChangeHandle}
+      <input
         className="border"
+        value={inputField}
+        onChange={(e) => setInputField(e.target.value)}
+      ></input>
+      <select
+        value={currCategory}
+        onChange={(e) => setCurrCategory(e.target.value)}
       >
-        {categories.map((cat, index) => (
-          <option key={index} value={cat}>{cat}</option>
+        {category.map((list, index) => (
+          <option key={index}>{list}</option>
         ))}
       </select>
-      <button className="border">ADD</button>
+      <button className="border" onClick={addHandle}>
+        ADD
+      </button>
 
-      {/* filtre */}
-      <div>
-        <label>FILTER BY CATEGORY</label>
+      {/* filter */}
+      <div className="flex">
+        <h1>FILTERED LIST : </h1>
         <select
-          className="border"
-          value={filtreCategory}
-          onChange={(e)=>setFiltreCategory(e.target.value)}
+          value={filteredCat}
+          onChange={(e) => setFilteredCat(e.target.value)}
         >
-          <option className="border" value="All">
-            ALL
-          </option>
-          {categories.map((cat, index) => (
-            <option className="border" key={index}>{cat}</option>
+          <option>ALL</option>
+          {category.map((list, index) => (
+            <option key={index}>{list}</option>
           ))}
         </select>
       </div>
 
-      {/* display todo */}
+      {/* display */}
 
       <div>
         <ol>
-          {filteredTodos.map((list, index) => (
+          {filteredList.map((list, index) => (
             <li key={index}>
               <span>
                 {list.text} - <strong>{list.category}</strong>
               </span>
-              <button className="border" onClick={() =>deleteHandle(index)}>DELETE</button>
-              <button className="border" onClick={()=>upHandle(index)} >UP</button>
+              <button className="border" onClick={() => deleteHandle(index)}>
+                Delete
+              </button>
+              <button className="border" onClick={()=>upHandle(index)}>UP</button>
               <button className="border" onClick={()=>downHandle(index)}>DOWN</button>
             </li>
           ))}
