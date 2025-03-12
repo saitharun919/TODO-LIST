@@ -5,6 +5,7 @@ const Todo = () => {
   const [todo, setTodo] = useState([
     { text: "Milk", category: "General" },
     { text: "Shirt", category: "Shopping" },
+    { text: "Tablets", category: "Health" },
   ]);
   const [inputField, setInputField] = useState("");
   const [currCategory, setCurrCategory] = useState("General");
